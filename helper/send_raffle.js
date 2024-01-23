@@ -54,6 +54,7 @@ await setDoc(docRef, {
       })
     }catch(err){
       ctx.reply("Some error occured please restart the process usingg /createRaffle again.")
+      console.log(err);
     }
 }
 

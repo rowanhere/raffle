@@ -18,9 +18,8 @@ const check_raffle = async (payload, db, ctx) => {
 const start_up = (bot, db) => {
   bot.start(async (ctx) => {
     const admins = ["506351282","533789921","689803763"];
-    console.log(ctx.chat.id);
     const payload = ctx.payload;
-    const is_Admin = admins.includes(ctx.chat.id.toString());
+    const is_Admin = admins.includes(ctx.message.from.id.toString());
     if (is_Admin) ctx.reply("Hey admin welcome to Raffle bot by Gaup. Create a raffle using /createRaffle");
     else if (payload == "") ctx.reply("Error! Invalid raffle id");
     else {

@@ -90,7 +90,7 @@ const scenes = (bot,db) => {
       ctx.deleteMessage()
       send_raffle(ctx,bot,db)
       return ctx.reply("👍");
-    } catch (err) {}
+    } catch (err) {console.log(err)}
   });
   bot.action("restart", (ctx) => {
     ctx.deleteMessage()
