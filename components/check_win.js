@@ -43,11 +43,11 @@ const check_win = async (bot, db) => {
           count: parseInt(winnerNo),
         });
 
-        const winnersLink = randomWinners.map(el => {
+        let winnersLink = randomWinners.map(el => {
           return `<a href="tg://user?id=${el.user_id}">${el.firstName}</a>`;
         });
-
-        const winnerMessage = `🚀<b>${doc.data().title}</b>🚀\n\nWinners are - ${winnersLink.join(",")}\nRaffle id - <b>${doc.id}</b>`;
+       winnersLink =  winnersLink.map((item, index) => `${index + 1}# ${item}`);
+        const winnerMessage = `🚀<b>${doc.data().title}</b>🚀\n\nWinners are - ${winnersLink.join("\n")}\nRaffle id - <b>${doc.id}</b>`;
 
         await bot.telegram.deleteMessage("-1002040907710", parseInt(messageID));
         await bot.telegram.sendMessage("-1002040907710", winnerMessage, {
