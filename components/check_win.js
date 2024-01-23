@@ -16,41 +16,55 @@ const check_win = async (bot, db) => {
       const d = doc;
       const q = query(collection(db, "raffle"), where("ended", "==", false));
       const querySnapshot = await getDocs(q);
-      querySnapshot.forEach(async (doc) => {
+
+      const winnerPromises = querySnapshot.docs.map(async (doc) => {
         const messageID = doc.data().message_id;
-        const entries = doc.data().entries;
+        const entries = doc.data().entries || [];
         const winnerNo = doc.data().winner_no;
         const date = Date.now();
         if (doc.data().end_at > date) return;
+
         if (!messageID) return;
-        if (!entries) return;
+
         if (parseInt(winnerNo) > entries.length) {
           const message = `Raffle ID *${doc.id}* abandoned due to insufficient participants. Stay tuned for the next one!`;
-          bot.telegram.deleteMessage("-1002040907710", parseInt(messageID));
-          bot.telegram.sendMessage("-1002040907710", message, {
+          await bot.telegram.deleteMessage("-1002040907710", parseInt(messageID));
+          await bot.telegram.sendMessage("-1002040907710", message, {
             message_thread_id: 2,
             parse_mode: "Markdown",
           });
-          await deleteDoc(d(db, "raffle", doc.id));
+          await updateDoc(d(db, "raffle", doc.id), {
+            ended: true,
+            abandoned:true
+          });
           return;
         }
+
         const randomWinners = pickRandom(entries, {
           count: parseInt(winnerNo),
         });
-        const winners = randomWinners.map((el) => el.username || el.user_id);
-        const winnerMessage = `🚀*${doc.data().title}*🚀\n\nWinners are - @${winners.join(" @")}\nRaffle id - *${doc.id}*
-        `
+
+        const winnersLink = randomWinners.map(el => {
+          return `<a href="tg://user?id=${el.user_id}">${el.firstName}</a>`;
+        });
+
+        const winnerMessage = `🚀<b>${doc.data().title}</b>🚀\n\nWinners are - ${winnersLink.join(",")}\nRaffle id - <b>${doc.id}</b>`;
+
         await bot.telegram.deleteMessage("-1002040907710", parseInt(messageID));
         await bot.telegram.sendMessage("-1002040907710", winnerMessage, {
           message_thread_id: 2,
-          parse_mode: "Markdown",
+          parse_mode: "html",
         });
-       
-        await updateDoc(d(db, "raffle", doc.id),{
-          ended:true
+
+        await updateDoc(d(db, "raffle", doc.id), {
+          ended: true
         });
       });
-    } catch (err) {}
+
+      await Promise.all(winnerPromises);
+    } catch (err) {
+      console.error(err);
+    }
   });
 };
 

@@ -32,7 +32,7 @@ await setDoc(docRef, {
  })
  
     const buttons = Markup.inlineKeyboard([
-        Markup.button.url('Enter Raffle', `https://t.me/blanksfillme_bot?start=${docRef.id}`),
+        Markup.button.url('Enter Raffle', `https://t.me/guapRaffle_bot?start=${docRef.id}`),
     ])              
       const message2 = `
       *🚀 ${data.title.toUpperCase().split(".").join("\\.")}🚀*\n

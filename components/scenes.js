@@ -24,7 +24,7 @@ const scenes = (bot,db) => {
   });
   endTime.enter((ctx) => {
     ctx.replyWithMarkdownV2(
-      "Please provide a ending time for Raffel \n*\\(D days H hours or just D days or just H hours\\) format*:"
+      "Please provide a ending time for Raffle \n*\\(D days H hours or just D days or just H hours\\) format*:"
     );
   });
   image.enter((ctx) => {
@@ -78,7 +78,7 @@ const scenes = (bot,db) => {
     });
 
     ctx.reply(
-      "This is what raffle would look like: \n If you missed something you can click restart"
+      "This is what Raffle would look like: \n If you missed something you can click restart"
     );
   });
 
@@ -99,8 +99,8 @@ const scenes = (bot,db) => {
     ctx.reply("Start over using /createRaffle");
   });
   bot.command("createRaffle", (ctx) => {
-    const chatId = ctx.chat.id.toString();
-    const admins = ["5063512825"];
+    const chatId = ctx.message.from.id.toString();
+    const admins = ["5063512825","5337899216","6898037633","6923978105"];
     if (!admins.includes(chatId)) {
       ctx.reply("Not a admin error");
       return;

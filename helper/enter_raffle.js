@@ -3,9 +3,9 @@ import { Markup } from "telegraf";
 const enter_raffle = async (id,ctx,db) => {
     const raffle = doc(db, "raffle", id.toString());
   try{
-    const [username,user_id] = [ctx.chat.username??null , ctx.chat.id.toString()];
+    const [firstName,user_id] = [ctx.chat.first_name || "", ctx.chat.id.toString()];
    await updateDoc(raffle, {
-        entries: arrayUnion({username,user_id})
+        entries: arrayUnion({firstName,user_id})
     });
     await ctx.replyWithMarkdown(`Your entry was captured! \n\n*Raffle id - ${id.toString()}*`)
     ctx.reply('🎉')
@@ -20,7 +20,7 @@ const enter_raffle = async (id,ctx,db) => {
      ||@everyone||`
 
      const buttons = Markup.inlineKeyboard([
-      Markup.button.url('Enter Raffle', `https://t.me/blanksfillme_bot?start=${ss.id}`),
+      Markup.button.url('Enter Raffle', `https://t.me/guapRaffle_bot?start=${ss.id}`),
   ]) 
   ctx.telegram.editMessageCaption(-1002040907710,ss.message_id,undefined,message,{
     parse_mode:"MarkdownV2",
